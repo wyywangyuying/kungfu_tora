@@ -1,0 +1,182 @@
+{
+  "name": "@kungfu-trader/kfx-broker-tora",
+  "author": {
+    "name": "kungfu-trader",
+    "email": "info@kungfu.link"
+  },
+  "version": "1.0.10-alpha.0",
+  "description": "Kungfu Extension - TORA",
+  "license": "UNLICENSED",
+  "main": "package.json",
+  "repository": {
+    "url": "https://github.com/kungfu-trader/kfx-broker-tora.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "binary": {
+    "module_name": "kfx-broker-tora",
+    "module_path": "dist/tora",
+    "remote_path": "{module_name}/v{major}/v{version}",
+    "package_name": "{module_name}-v{version}-{platform}-{arch}-{configuration}.tar.gz",
+    "host": "https://prebuilt.libkungfu.cc"
+  },
+  "scripts": {
+    "install": "node -e \"require('@kungfu-trader/kungfu-core').prebuilt('install')\"",
+    "build": "kfs extension build",
+    "clean": "kfs extension clean",
+    "format": "node ./node_modules/@kungfu-trader/kungfu-core/.gyp/node-format-cpp.js src",
+    "dev": "kfs craft dev",
+    "package": "kfs project package"
+  },
+  "dependencies": {
+    "@kungfu-trader/kungfu-core": "~2.4.0"
+  },
+  "devDependencies": {
+    "@kungfu-trader/kfx-broker-sim": "~2.4.0",
+    "@kungfu-trader/kungfu-cli": "~2.4.0",
+    "@kungfu-trader/kungfu-sdk": "~2.4.0"
+  },
+  "kungfuDependencies": {
+    "tora": "v4.0.0"
+  },
+  "kungfuBuild": {
+    "cpp": {
+      "cmakeOverride": true,
+      "target": "bind/python",
+      "links": {
+        "windows": [
+          "xfastmdapi",
+          "xmdapi",
+          "fasttraderapi",
+          "traderapi"
+        ],
+        "linux": [
+          "xfastmdapi",
+          "xmdapi",
+          "fasttraderapi",
+          "traderapi"
+        ]
+      }
+    }
+  },
+  "kungfuConfig": {
+    "key": "tora",
+    "name": "TORA",
+    "config": {
+      "td": {
+        "type": [
+          "stock"
+        ],
+        "settings": [
+          {
+            "key": "account_name",
+            "name": "account_name",
+            "type": "str",
+            "errMsg": "请填写账户别名",
+            "tip": "请填写账户别名"
+          },
+          {
+            "key": "account_id",
+            "name": "账号",
+            "type": "str",
+            "errMsg": "请填写账号",
+            "required": true,
+            "primary": true
+          },
+          {
+            "key": "password",
+            "name": "密码",
+            "type": "password",
+            "errMsg": "请填写密码",
+            "required": true,
+            "validator": [
+              "blankValidator"
+            ]
+          },
+          {
+            "key": "td_front",
+            "name": "交易前置",
+            "type": "str",
+            "errMsg": "请填写交易前置",
+            "validator": [
+              "tcpUriValidator"
+            ],
+            "required": true
+          },
+          {
+            "key": "dynamic_password",
+            "name": "动态密码",
+            "type": "str",
+            "errMsg": "请填写动态密码, 由证券公司处获取",
+            "required": true
+          },
+          {
+            "key": "sh_shareholder_id",
+            "name": "沪市股东账号",
+            "type": "str",
+            "tip": "多股东账号的用户在此填写希望使用的股东账号，留空则选择默认股东账号",
+            "required": false
+          },
+          {
+            "key": "sz_shareholder_id",
+            "name": "深市股东账号",
+            "type": "str",
+            "tip": "多股东账号的用户在此填写希望使用的股东账号，留空则选择默认股东账号",
+            "required": false
+          }
+        ]
+      },
+      "md": {
+        "type": [
+          "stock"
+        ],
+        "settings": [
+          {
+            "key": "account_id",
+            "name": "账号",
+            "type": "str",
+            "errMsg": "请填写账号",
+            "required": true
+          },
+          {
+            "key": "password",
+            "name": "密码",
+            "type": "password",
+            "errMsg": "请填写密码",
+            "required": true,
+            "validator": [
+              "blankValidator"
+            ]
+          },
+           {
+            "key": "protocol",
+            "name": "protocol",
+            "type": "select",
+            "options": [
+              {
+                "value": "tcp",
+                "label": "tcp"
+              },
+              {
+                "value": "udp",
+                "label": "udp"
+              }
+            ],
+            "default":"tcp",
+            "required": true,
+            "tip": "请选择 protocol, tcp or udp"
+          },
+          {
+            "key": "md_front",
+            "name": "行情前置",
+            "type": "str",
+            "errMsg": "请填写行情前置",
+            "required": true,
+            "tip": "填写格式为: protocol://ipaddress:port, 例如: ”tcp://127.0.0.1:12001” 或 ”udp://224.3.9.110:34567” "
+          }
+        ]
+      }
+    }
+  }
+}
